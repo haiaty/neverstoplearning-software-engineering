@@ -6,6 +6,8 @@ The Actor model defines a relatively simple but powerful way for designing and i
  
 The Actor model is used to provide an effective way for building applications that perform tasks with a **high level of concurrency** and increasing levels of **resource efficiency**. Importantly, the Actor model also has well-defined ways for **handling errors and failures gracefully**, ensuring a level of **resilience** that isolates issues and prevents cascading failures and massive downtime
 
+This simplicity and intuitive behavior of the actor as a buildingblock allows for designing and implementing very elegant, highly efficient applications that natively know **how to heal themselves when failures occur**.
+
 
 # Resources
 
