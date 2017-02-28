@@ -26,13 +26,14 @@ Actors may **create other actors**. When one actor creates another actor, the cr
 
 The supervisor may send messages to each of its workers, which run **independently and concurrently**.
 
-
 There are a number of benefits to this approach of delegating the work out to worker actors. One key benefit is **performance**. Because the workers run concurrently, the performance is based on the over Actor Supervisors and Workers all time it takes for the supervisor to respond and reduced to the response time of the **slowest worker**.
 
 The asynchronous approach also scales more efficiently.The **cost of adding more workers is much less** than in a synchronous implementation.
 
 Another benefit of the asynchronous delegated approach is related to **failure resilience and recovery**.  If a
 worker does not respond in time, then the supervisor decides how to proceed. If a worker runs into a problem, it suspends itself and **notifies its supervisor** of the failure. When the supervisor is notified **it determines what should be done ** to handle the problem and how to get the worker actor back into a healthy state.
+
+So delegation of work through supervised workers allows for higher levels of concurrency and fault tolerance.
 
 
 # Actor System
