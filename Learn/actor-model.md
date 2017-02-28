@@ -1,6 +1,6 @@
 
 
-
+# The Actor Model
 
 The Actor model defines a relatively simple but powerful way for designing and implementing applications that can distribute and share work across all system resources—from threads and cores to clusters of servers and data centers. 
  
