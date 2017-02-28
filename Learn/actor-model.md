@@ -20,7 +20,20 @@ When an actor sends a message to another actor, **it does not wait for a respons
 
 Actors that can send and receive messages are prepared for multiple possible outcomes: a response may be received quickly, there may be no response at all, or there may be a response that is too late to be useful. The point here is that **the actor may be implemented to handle one or more of these possible outcomes**.
 
+# Actor Supervisors and Workers
+
+Actors may **create other actors**. When one actor creates another actor, the creator is known as the supervisor and the created actor is known as the worker. Worker actors may be created for many reasons, but among the most common reasons **is for delegating work**. The supervisor creates one or more worker actors and **delegates work to them**.
+
+The supervisor may send messages to each of its workers, which run **independently and concurrently**.
+
+
+There are a number of benefits to this approach of delegating the work out to worker actors. One key benefit is **performance**. Because the workers run concurrently, the performance is based on the over Actor Supervisors and Workers all time it takes for the supervisor to respond and reduced to the response time of the **slowest worker**.
+
+The asynchronous approach also scales more efficiently.The **cost of adding more workers is much less** than in a synchronous implementation.
+
+Another benefit of the asynchronous delegated approach is related to **failure resilience and recovery**.  If a
+worker does not respond in time, then the supervisor decides how to proceed. If a worker runs into a problem, it suspends itself and **notifies its supervisor** of the failure. When the supervisor is notified **it determines what should be done ** to handle the problem and how to get the worker actor back into a healthy state.
 
 # Resources
 
-* [Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee]
+* Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee
