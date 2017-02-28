@@ -34,6 +34,17 @@ The asynchronous approach also scales more efficiently.The **cost of adding more
 Another benefit of the asynchronous delegated approach is related to **failure resilience and recovery**.  If a
 worker does not respond in time, then the supervisor decides how to proceed. If a worker runs into a problem, it suspends itself and **notifies its supervisor** of the failure. When the supervisor is notified **it determines what should be done ** to handle the problem and how to get the worker actor back into a healthy state.
 
+
+# Actor System
+
+Actors exist within an actor system, and the process of actors sending asynchronous messages to each other is handled by the actor system.
+
+In an actor system, threads are allocated to actors that have messages to process. When the actor has no messages to process, **the thread is allocated to other actors that have messages to process** and that have something to do, so that they are not sitting idle while waiting for something like an I/O to complete.
+
+Even when an actor still has more messages to process, it is given a limited amount of time with a thread. **The system is costantly moving the threads around to various actors trying to maintain a fair distribution of thread usage** without letting some actors dominate their time with threads or, conversely, let some actors be starved for attention.
+
+The end result is that asynchronous actor systems can **handle many more concurrent requests with the same amount of resources ** since the limited number of threads never sit idle while waiting for I/O operations to complete.
+
 # Resources
 
 * Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee
