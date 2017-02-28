@@ -45,6 +45,17 @@ Even when an actor still has more messages to process, it is given a limited amo
 
 The end result is that asynchronous actor systems can **handle many more concurrent requests with the same amount of resources ** since the limited number of threads never sit idle while waiting for I/O operations to complete.
 
+The actor system provides all the building blocks needed for creating clusters, which can then be used to architect, design, and implement distributed systems that can elastically expand and contract as needed
+
+## cluster of actors systems
+
+Even with the use of asynchronous actors and their efficient use of a single system, the level of activity
+may still get to the point that the flow of work to be done exceeds the capacity of the system to process it. **To address this the actor system can form clusters**. 
+
+A cluster **is where two or more systems, each running an actor system, are configured to work as a collaborative group**.
+
+From the perspective of the actors running in a cluster, there is no difference between sending messages to actors in the same system, or between actors on different systems because the actor system still handles all the actual messaging between actors. 
+
 # Resources
 
 * Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee
