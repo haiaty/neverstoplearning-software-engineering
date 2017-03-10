@@ -3,6 +3,8 @@
 
 XPath (XML Path Language) is a query language for selecting nodes from an XML document. 
 
+In it's basic form XPath allows a 'query' or 'expression' to be appied to an XML tree or branch of an XML tree. The expression can select portions of the tree based on tests applied to nodes within the tree, or can simply answer questions such as 'does the <product...> tag have a 'state' attribute with the value 'inStock'.
+
 In addition, XPath may be used to compute values (e.g., strings, numbers, or Boolean values) from the content of an XML document. 
 
 XPath was defined by the World Wide Web Consortium (W3C)
@@ -155,5 +157,5 @@ sum(//foo:singer/@id)
 
 # Resources
 
-[Xpath from wikipedia](https://en.wikipedia.org/wiki/XPath)
-[Xpath tester online](http://www.freeformatter.com/xpath-tester.html)
+- [Xpath from wikipedia](https://en.wikipedia.org/wiki/XPath)
+- [Xpath tester online](http://www.freeformatter.com/xpath-tester.html)
