@@ -57,6 +57,10 @@ A cluster **is where two or more systems, each running an actor system, are conf
 
 From the perspective of the actors running in a cluster, there is no difference between sending messages to actors in the same system, or between actors on different systems because the actor system still handles all the actual messaging between actors. 
 
+## Actor Failure Detection, Recovery, and Self-Healing
+
+There are a number of strategies available for handling errors and recovering from failures both at the actor level and at the actor system level.
+
 # Resources
 
 * Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee
