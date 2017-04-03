@@ -57,6 +57,22 @@ A cluster **is where two or more systems, each running an actor system, are conf
 
 From the perspective of the actors running in a cluster, there is no difference between sending messages to actors in the same system, or between actors on different systems because the actor system still handles all the actual messaging between actors. 
 
+## Actor Failure Detection, Recovery, and Self-Healing
+
+There are a number of strategies available for handling errors and recovering from failures both at the actor level and at the actor system level.
+
+Actors that create other actors are direct supervisors, and for error handling this means that supervi‐ sors are notified when a worker runs into a problem.
+
+All actors have a supervisor. Actors will form themselves into a hierarchy of worker to supervisor to grand-supervisor and so on. At the top of the hierarchy is the actor system. If a problem is escalated to the actor system, its default recovery process is to restart the worker (or terminate the worker when more serious problems occur). This supervisory approach frees up the worker from handling its own errors, which means that it is focused completely on performing its tasks. 
+
+Actor supervision handles workers that run into trouble, handling error recovery that frees workers to focus on the task at hand.
+
+Actors may watch for the **termination of other actors and react appropriately when this happens**.
+
+Actors may be wrapped in a **circuit breaker** that can stop the flow of messages to an actor that is unable to perform tasks due to some other, possibly external, problem. Circuit breakers allow for graceful recovery and self-healing, stemming the flow of traffic to a failed service to accelerate the service recovery process.
+
+Actors may be cluster aware and designed to be notified when nodes join or leave the cluster. This can be used to react to the cluster changes
+
 # Resources
 
 * Designing reactive systems The Role Of Actors In Distributed Architecture By Hugh McKee
