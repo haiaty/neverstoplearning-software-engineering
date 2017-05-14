@@ -1,4 +1,10 @@
 
+## DOCKER CONTAINERS
+
+A Docker container is similar to a virtual machine. It basically allows you to run a pre-packaged "Linux box" inside a container. The main difference between a Docker container and a typical virtual machine is that Docker is not quite as isolated from the surrounding environment as a normal virtual machine would be. A Docker container shares the Linux kernel with the host operating system, which means it doesn't need to "boot" the way a virtual machine would.
+
+Since so much is shared, firing up a Docker container is a quick and cheap operation — in most cases you can bring up a full Docker container (the equivalent of a normal virtual machine) in the same time as it would take to run a normal command line program. This is great because it makes deploying complex systems a much easier and more modular process
+
 
 ## Docker images
 
@@ -23,6 +29,12 @@ $ docker pull ubuntu:12.04
 
 Quite simply, volumes are directories (or files) that are outside of the default Union File System and exist as normal directories and files on the host filesystem.
 
+There are three main use cases for Docker data volumes:
+
+To keep data around when a container is removed
+To share data between the host filesystem and the Docker container
+To share data with other Docker containers
+
 
 docker run -v /home/adrian/data:/data debian ls /data
 
@@ -38,10 +50,23 @@ If you create another container binds to an existing named volume, no files from
 They don’t have a docker command to backup / export a named volume. However you can find out the actual location of the file by “docker volume inspect [volume-name]”.
 A more fancy way to backup/restore a named volume is to run a container (could be from a simple debian:jessie image) that binds to the named volume and run a command to export to a host directory / export to the cloud. Then later import by the same method.Backup:
 1
-$ docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backu
+$ docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup
+
+#### example sharing data host and containers
+
+docker run -d -v ~/nginxlogs:/var/log/nginx -p 5000:80 -i nginx
+
+ -v ~/nginxlogs:/var/log/nginx — We set up a volume that links the /var/log/nginx directory from inside the Nginx container to the ~/nginxlogs directory on the host machine. Docker uses a : to split the host's path from the container path, and the host path always comes first.
+
+ -d — Detach the process and run in the background. Otherwise, we would just be watching an empty Nginx prompt and wouldn't be able to use this terminal until we killed Nginx.
+
+ -p 5000:80 — Setup a port forward. The Nginx container is listening on port 80 by default, and this maps the Nginx container's port 80 to port 5000 on the host system.
+
+
 
 * [Understanding docker volumes](http://container-solutions.com/understanding-volumes-docker/)
 * [https://madcoda.com/2016/03/docker-named-volume-explained/](https://madcoda.com/2016/03/docker-named-volume-explained/)
+* [https://www.digitalocean.com/community/tutorials/how-to-work-with-docker-data-volumes-on-ubuntu-14-04](https://www.digitalocean.com/community/tutorials/how-to-work-with-docker-data-volumes-on-ubuntu-14-04)
 
 ## EXAMPLES
 
