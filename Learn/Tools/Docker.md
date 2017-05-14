@@ -35,6 +35,24 @@ To keep data around when a container is removed
 To share data between the host filesystem and the Docker container
 To share data with other Docker containers
 
+A container's volumes are just directories on the host regardless of what method they are created by. If you don't specify a directory on the host, Docker will create a new directory for the volume, normally under /var/lib/docker/vfs.
+
+However the volume was created, it's easy to find where it is on the host by using the docker inspect command e.g:
+
+$ ID=$(docker run -d -v /data debian echo "Data container")
+$ docker inspect -f {{.Mounts}} $ID
+[{0d7adb21591798357ac1e140735150192903daf3de775105c18149552a26f951 /var/lib/docker/volumes/0d7adb21591798357ac1e140735150192903daf3de775105c18149552a26f951/_data /data local  true }]
+We can see that Docker has created a directory for the volume at /var/lib/docker/volumes/0d7adb21591798357ac1e140735150192903daf3de775105c18149552a26f951/_data.
+
+You are free to modify/add/delete files in this directory from the host, but note that you may need to use sudo for permissions.
+
+Docker will only delete volume directories in two circumstances:
+
+If the --rm option is given to docker run, any volumes will be deleted when the container exits
+If a container is deleted with docker rm -v CONTAINER, any volumes will be removed.
+In both cases, volumes will only be deleted if no other containers refer to them. Volumes mapped to specific host directories (the -v HOST_DIR:CON_DIR syntax) are never deleted by Docker. However, if you remove the container for a volume, the naming scheme means you will have a hard time figuring out which directory contains the volume.
+
+
 
 docker run -v /home/adrian/data:/data debian ls /data
 
