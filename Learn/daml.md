@@ -2,6 +2,13 @@ concepts, information and my experience and other about working with daml (aroun
 
 ## CONCEPTS
 
+## PARTICIPANT NODE 
+
+ “participant node” is anything that exposes the gRPC Ledger API. From a client perspective, it’s basically an IP address, a port, and a promise that we can make a gRPC connection to it and expect it to understand the messages defined by the Ledger API spec.
+There are many different implementations that could be the server behind that IP & port, and “participant node” is the generic term for them.
+The JSON API is a normal (gRPC) Ledger API client. It is not special in any way; anyone could have written it, it can run on a separate server, etc. It happens to be a component we provide because it seemed to fit a relatively common use-case, but ultimately it’s not part of the core ledger model and it’s not more special than any application you would write against the (gRPC) Ledger API.
+You could imagine a setup where the JSON API runs on the same server (or within the same internal network) as the (gRPC) Ledger API, and where the JSON API is the only one exposed “outside” that server/internal network. That’s a valid choice, though one in which you should remember that the JSON API does not expose the full power of the Ledger API, so clients that are forced to only go through it will be somewhat restricted in what they can do.
+
 #### CONTRACTS
 
 * are immutable. In order to change a contract, a new one must be created and the old one is archived
