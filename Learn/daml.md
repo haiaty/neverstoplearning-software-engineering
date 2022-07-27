@@ -1,6 +1,67 @@
 concepts, information and my experience and other about working with daml (around 6 months working with it)
 
-## CONCEPTS
+## TIPS, SUGGESTIONS, BEST PRACTICES
+
+
+- do not store large data on daml (https://discuss.daml.com/t/on-attachments-what-you-should-and-shouldnt-store-on-a-ledger/579/15 )
+- when upgrade: prefix module with v2 (https://discuss.daml.com/t/whats-the-best-way-to-organize-my-project-so-that-im-easily-upgradable/1762
+
+
+## CONCEPTS AND RELATED
+
+#### PARTY
+A party represents a person or legal entity. It is a unicode string. The party text can only contain alphanumeric characters, -, _ and spaces. 
+Each party has a unique identity.
+
+##### HOW TO ADD A NEW PARTY?
+
+How to add a new party?  https://docs.daml.com/concepts/identity-and-package-management.html#provisioning-identifiers  
+1. The first step in adding a new party to the ledger is to provision a new identifier for the party by using the The Ledger API  AllocateParty method (The AllocateParty call can take the desired identifier and display name as optional parameters, but these are merely hints and the ledger implementation may completely ignore them.)
+2. link the identifier to a party in the real world (praticamente dobbiamo trovare un modo per farsì che dato un  identifier di un party si riesca a risalire alla identità nel mondo reale in maniera inequivocabile). The solutions for linking the identifiers to real-world identities could rely on certificate chains, verifiable credentials, or other mechanisms. The mechanisms can be implemented off-ledger, using Daml workflows (for instance, a “know your customer” workflow), or a combination of these.
+
+---
+
+#### TEMPLATES 
+
+What is a template? data, bevaiour and rights/obbligations (kinf of authorization) for a daml contract.
+
+---
+#### CHOICES
+
+choices are permissioned functions that result in an update. 
+
+choices: business logic, which under the right permission, can mutate the ledger causing an update. For example, using choices, authorities can be swapped.
+
+all choices must specify who can execute them. it can be executed by one or more participants. if there are more than one then it means that everyone must execute/accept it
+
+
+by default, all choices consume the contract on which they are called unless they have the keyword "non-consuming"
+
+a template can have 0 or more choices.
+
+---
+#### SQL ANALOGY
+
+- each template is like a table and the data fields are the columns;
+- each contract is like a row;
+- all templates are like a database/schema;
+- choices are like sproc. they are atomic;
+- keys like the unique key in a table.
+
+---
+#### SCRIPTS
+
+Scripts on the other hand do not fail atomically: while each submit is atomic, if a submit succeeded and the script fails later, the effects of that submit will still be applied to the ledger.
+
+---
+#### TRANSACTIONS
+
+A transaction is a list of actions. 
+Transactions succeed or fail atomically as a whole.
+
+#### DAR FILE
+
+A dar file is Daml’s equivalent of a JAR file in Java: it’s the artifact that gets deployed to a ledger to load the package and its dependencies. dar files are fully self-contained in that they contain all dependencies of the main package.
 
 #### DAML ACTIVE CONTRACT SET (ACS)
 
@@ -19,6 +80,18 @@ You could imagine a setup where the JSON API runs on the same server (or within 
 * Daml contracts are created with a complete list of parties that can see them (signatories + observers + choice controllers, usually called “stakeholders” as a whole).
 (https://discuss.daml.com/t/daml-contracts-and-visibility/3161/2)
 
+---
+
+#### SIGNATORY
+
+what is a signatory? a participant that must have consented in the creation of the contract. 
+he is practically one of those who gave permission for the contract to be created/archived. so he answers the question 'who can create the contract'?
+
+---
+
+#### OBSERVER
+
+ it is optional. they are the ones who can see the contract. they basically have the right to see the contract. nothing else, just see.
 
 ---
 
@@ -124,4 +197,8 @@ A better option (IMHO) is to sign centrally. This way the keys are kept in a cen
 
 in general, the owner and operator of the PostgreSQL instance where you're hosting the ledger will indeed be able to see all of its content. This means that there must be a trust relationship between the operator of the database and the party which is hosting their data there. If a party does not trust any specific operator, they can run their own node. If that's the case, only the data which that party is authorized to see will be on the participant.
 Note that, even if multiple parties are hosting their data on the same, trusted node, they will not be able to access each other's data, as the Ledger API only shows to each party the data that it's authorized to access. https://stackoverflow.com/questions/70580340/how-is-daml-able-to-maintain-privacy-between-the-parties-if-they-share-the-same
+
+
+
+
 
