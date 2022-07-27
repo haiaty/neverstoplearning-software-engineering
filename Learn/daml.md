@@ -2,7 +2,11 @@ concepts, information and my experience and other about working with daml (aroun
 
 ## CONCEPTS
 
-## PARTICIPANT NODE 
+#### DAML ACTIVE CONTRACT SET (ACS)
+
+basically it is the current state of the application (all events have been applied up to that point since daml uses an event sourcing model
+
+#### PARTICIPANT NODE 
 
  “participant node” is anything that exposes the gRPC Ledger API. From a client perspective, it’s basically an IP address, a port, and a promise that we can make a gRPC connection to it and expect it to understand the messages defined by the Ledger API spec.
 There are many different implementations that could be the server behind that IP & port, and “participant node” is the generic term for them.
@@ -114,4 +118,10 @@ Centralized signing (https://stackoverflow.com/questions/17607604/digitally-sign
 A better option (IMHO) is to sign centrally. This way the keys are kept in a centralized FIPS-secure server. Meanwhile, the signers just use a webapp to authorize the signing. The signers don't need to hold the private key since it is stored in the secure server. In the centralized design, the private key does not leave the central server. Rather, the document or data to be signed is sent to the server, is signed, and then the signed doc or data (e.g. XML) is returned to the webapp.
 
 
+## FAQ
+
+#### who can see the postgresql data?
+
+in general, the owner and operator of the PostgreSQL instance where you're hosting the ledger will indeed be able to see all of its content. This means that there must be a trust relationship between the operator of the database and the party which is hosting their data there. If a party does not trust any specific operator, they can run their own node. If that's the case, only the data which that party is authorized to see will be on the participant.
+Note that, even if multiple parties are hosting their data on the same, trusted node, they will not be able to access each other's data, as the Ledger API only shows to each party the data that it's authorized to access. https://stackoverflow.com/questions/70580340/how-is-daml-able-to-maintain-privacy-between-the-parties-if-they-share-the-same
 
