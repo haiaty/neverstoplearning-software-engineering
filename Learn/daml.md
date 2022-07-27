@@ -88,6 +88,10 @@ You could imagine a setup where the JSON API runs on the same server (or within 
 what is a signatory? a participant that must have consented in the creation of the contract. 
 he is practically one of those who gave permission for the contract to be created/archived. so he answers the question 'who can create the contract'?
 
+##### How can I implement the case that the contract requires dynamic numbers of signatories?
+
+https://discuss.daml.com/t/how-can-i-implement-the-case-that-the-contract-requires-dynamic-numbers-of-signatories/1636
+
 ---
 
 #### OBSERVER
