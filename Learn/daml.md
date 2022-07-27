@@ -5,6 +5,7 @@ concepts, information and my experience and other about working with daml (aroun
 
 - do not store large data on daml (https://discuss.daml.com/t/on-attachments-what-you-should-and-shouldnt-store-on-a-ledger/579/15 )
 - when upgrade: prefix module with v2 (https://discuss.daml.com/t/whats-the-best-way-to-organize-my-project-so-that-im-easily-upgradable/1762
+- Good design patterns (https://docs.daml.com/daml/patterns.html )
 
 
 ## CONCEPTS AND RELATED
