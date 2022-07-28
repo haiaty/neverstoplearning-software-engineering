@@ -88,7 +88,10 @@ Da <https://sawtooth.hyperledger.org/docs/1.2/app_developers_guide/installing_sa
 #### How PBFT works
 
 https://www.hyperledger.org/blog/2019/02/13/introduction-to-sawtooth-pbft
+
 https://sawtooth.hyperledger.org/docs/1.2/pbft/introduction-to-sawtooth-pbft.html
+
+https://github.com/hyperledger/sawtooth-rfcs/blob/main/text/0019-pbft-consensus.md
 
 #### How to configure PBFT
 
