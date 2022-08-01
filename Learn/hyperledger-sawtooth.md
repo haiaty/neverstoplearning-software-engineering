@@ -97,3 +97,11 @@ https://github.com/hyperledger/sawtooth-rfcs/blob/main/text/0019-pbft-consensus.
 
 https://sawtooth.hyperledger.org/docs/1.2/pbft/configuring-pbft.html
 
+##### how to change configuration 'max_batches_per_block'
+
+NOTE: if you are using docker, you can enter into the validator container to execute the command
+```
+sawset proposal create --url <url_to_rest_api> --key <path_to_private_key example: /etc/sawtooth/keys/validator.priv> sawtooth.publisher.max_batches_per_blo
+ck=1
+```
+
