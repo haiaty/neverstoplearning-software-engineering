@@ -93,6 +93,46 @@ https://sawtooth.hyperledger.org/docs/1.2/pbft/introduction-to-sawtooth-pbft.htm
 
 https://github.com/hyperledger/sawtooth-rfcs/blob/main/text/0019-pbft-consensus.md
 
+#### Trasanction per seconds calculation
+
+To calculate TPS, you have to know 
+* the block time (Block time is the average time it takes to create a new block in a chain.)
+* the average transaction size, 
+* and the block size. 
+
+The TPS may vary on sawooth based on different factors:
+
+* how many transactions there are per batch
+* how many batches there are per block. A block having 3 batches with every batch having between 10-12 transactions is different from a block having only one batch and only one transaction.
+* the latency of network for 2f + 1 nodes communication
+
+##### ===> a TPS tranaction test results (with a network of 4 nodes)
+
+
+Block size: 31k
+
+26k (preso dalla dimensione risposta del payload dalla chiamata via http alla rest per singolo blocco)
+31k (preso dalla dimensione dalla risposta del commando 
+
+sawtooth block show --url http://rest-api:8008 43ecccd7888d94d0bb6b8ff16df3a037e2851f46def6748547b85c41098f619d1fccff78fd50096c918dfa77dc82f54d2f2bee27378469777f4204b05f036490 | wc -c )
+
+
+Average Transaction size:  450 byte
+
+Block time (time to produce a block): 
+
+SENZA LIMITE NEL BATCH PER BLOCK: Piu o meno dai 3 ai 4 sec of block time so (31k/450)/3 or 4   -----> dai 17 TPS ai 30 TPS sec
+ 
+times of blocks
+(4,3 + 1 + 2,1+ 1,9 ,2, 3 + 4,2 +6,8 + 9,9 + 3,3 + 3,3) /10
+
+
+WITH A LIMIT OF 1 BATCH PER BLOCK AND 1 TRANSACTION PER BATCH:
+(1,2 + 0.99 + 1 + 1 + 0,98 + 1 + 0.95 + 1,05 + 0,96)   ~~  1 sec   ----> (31k/450)/1 = 68 TPS
+
+
+ 
+
 #### How to configure PBFT
 
 https://sawtooth.hyperledger.org/docs/1.2/pbft/configuring-pbft.html
