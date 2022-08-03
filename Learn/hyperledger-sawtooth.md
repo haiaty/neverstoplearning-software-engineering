@@ -151,7 +151,7 @@ ck=1
 
 ##### configuring a network with POET and docker
 
-In the node where you will create the genesis node:
+1. In the node where you will create the genesis node:
 
 - create folder poet-sawtooth-node
 - cd poet-sawtooth-node && touch docker-compose.yml
@@ -326,3 +326,9 @@ What I did:
 
 I change the docker images of the validator not to be "nightly" and left the poet-engine docker container to "nightly"
 
+
+2. run docker-compose up
+3. go to terminal and run all of your transaction processors / transaction families 
+4. execute a transaction from a client
+5. check if the block has been committed
+6. stop the network: docker-compose down -v  // -v to remove the volume
