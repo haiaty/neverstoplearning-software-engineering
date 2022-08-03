@@ -145,3 +145,184 @@ sawset proposal create --url <url_to_rest_api> --key <path_to_private_key exampl
 ck=1
 ```
 
+----
+
+### POET
+
+##### configuring a network with POET and docker
+
+In the node where you will create the genesis node:
+
+- create folder poet-sawtooth-node
+- cd poet-sawtooth-node && touch docker-compose.yml
+
+copy this content in the 'docke-compose.yml'
+
+```
+# Copyright 2018 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+version: "2.1"
+
+volumes:
+  poet-shared:
+
+services:
+  shell:
+    image: hyperledger/sawtooth-shell:nightly
+    container_name: sawtooth-shell-default
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
+
+  validator-0:
+    image: hyperledger/sawtooth-validator
+    container_name: sawtooth-validator-default-0
+    expose:
+      - 4004
+      - 5050
+      - 8800
+    ports:
+      - "4004:4004"
+    volumes:
+      - poet-shared:/poet-shared
+    command: |
+      bash -c "
+      sawadm keygen --force && \
+        mkdir -p /poet-shared/validator-0 || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator-0/ && \
+        while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done && \
+        while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
+        while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
+        cp /poet-shared/poet.batch / && \
+        sawset genesis \
+          -k /etc/sawtooth/keys/validator.priv \
+          -o config-genesis.batch && \
+      sawset proposal create -k /etc/sawtooth/keys/validator.priv sawtooth.consensus.algorithm.name=PoET sawtooth.consensus.algorithm.version=0.1 sawtooth.poet.report_public_key_pem=\"$$(cat /poet-shared/simulator_rk_pub.pem)\" sawtooth.poet.valid_enclave_measurements=$$(cat /poet-shared/poet-enclave-measurement) sawtooth.poet.valid_enclave_basenames=$$(cat /poet-shared/poet-enclave-basename) -o config.batch && \
+        sawset proposal create \
+          -k /etc/sawtooth/keys/validator.priv \
+             sawtooth.poet.target_wait_time=5 \
+             sawtooth.poet.initial_wait_time=25 \
+             sawtooth.publisher.max_batches_per_block=100 \
+          -o poet-settings.batch && \
+        sawadm genesis \
+          config-genesis.batch config.batch poet.batch poet-settings.batch && \
+        sawtooth-validator -v \
+          --bind network:tcp://eth0:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind consensus:tcp://eth0:5050 \
+          --peering static \
+          --endpoint tcp://validator-0:8800 \
+          --scheduler parallel
+      "
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+
+  rest-api-0:
+    image: hyperledger/sawtooth-rest-api
+    container_name: sawtooth-rest-api-default-0
+    expose:
+      - 8008
+    ports:
+      - "8008:8008"
+    command: |
+      bash -c "
+        sawtooth-rest-api \
+          --connect tcp://validator-0:4004 \
+          --bind 0.0.0.0:8008
+      "
+    stop_signal: SIGKILL
+
+  intkey-tp-0:
+    image: hyperledger/sawtooth-intkey-tp-python:nightly
+    container_name: sawtooth-intkey-tp-python-default-0
+    expose:
+      - 4004
+    command: intkey-tp-python -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  xo-tp-0:
+    image: hyperledger/sawtooth-xo-tp-python:nightly
+    container_name: sawtooth-xo-tp-python-default-0
+    expose:
+      - 4004
+    command: xo-tp-python -vv -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  settings-tp-0:
+    image: hyperledger/sawtooth-settings-tp:nightly
+    container_name: sawtooth-settings-tp-default-0
+    expose:
+      - 4004
+    command: settings-tp -v -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  poet-engine-0:
+    image: hyperledger/sawtooth-poet-engine:nightly
+    container_name: sawtooth-poet-engine-0
+    volumes:
+      - poet-shared:/poet-shared
+    command: "bash -c \"\
+        if [ ! -f /poet-shared/poet-enclave-measurement ]; then \
+            poet enclave measurement >> /poet-shared/poet-enclave-measurement; \
+        fi && \
+        if [ ! -f /poet-shared/poet-enclave-basename ]; then \
+            poet enclave basename >> /poet-shared/poet-enclave-basename; \
+        fi && \
+        if [ ! -f /poet-shared/simulator_rk_pub.pem ]; then \
+            cp /etc/sawtooth/simulator_rk_pub.pem /poet-shared; \
+        fi && \
+        while [ ! -f /poet-shared/validator-0/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-shared/validator-0/keys /etc/sawtooth && \
+        poet registration create -k /etc/sawtooth/keys/validator.priv -o /poet-shared/poet.batch && \
+        poet-engine -C tcp://validator-0:5050 --component tcp://validator-0:4004 \
+    \""
+
+  poet-validator-registry-tp-0:
+    image: hyperledger/sawtooth-poet-validator-registry-tp
+    container_name: sawtooth-poet-validator-registry-tp-0
+    expose:
+      - 4004
+    command: poet-validator-registry-tp -C tcp://validator-0:4004
+    environment:
+      PYTHONPATH: /project/sawtooth-core/consensus/poet/common
+    stop_signal: SIGKILL
+
+```
+
+NOTE: I've made some changes respect to the file provided by the team because I was getting a lot of errrors:
+
+first error I've got was that the poet engine was not producing blocks
+- then I got the error:
+- 
+```
+[2022-08-03 14:50:35.631 ERROR    zmq_driver] Uncaught driver exception
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/sawtooth_sdk/consensus/zmq_driver.py", line 82, in _driver_loop
+    result = self._process(message)
+  File "/usr/lib/python3/dist-packages/sawtooth_sdk/consensus/zmq_driver.py", line 179, in _process
+    'Received unexpected message type: {}'.format(type_tag))
+sawtooth_sdk.consensus.exceptions.ReceiveError: Received unexpected message type: 907![image](https://user-images.githubusercontent.com/12880451/182646586-478e224d-ca62-43cd-92a4-edd0cfd7c437.png)
+```
+
+What I did:
+
+I change the docker images of the validator not to be "nightly" and left the poet-engine docker container to "nightly"
+
