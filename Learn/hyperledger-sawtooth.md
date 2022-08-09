@@ -197,37 +197,13 @@ services:
       - 8800
     ports:
       - "4004:4004"
+      - "8800:8800"
     volumes:
       - poet-shared:/poet-shared
+      - /path/to/poet-sawtooth-node/data:/var/lib/sawtooth/ #to backup ledger
+      - /path/to/poet-sawtooth-node/configs:/etc/sawtooth
     command: |
-      bash -c "
-      sawadm keygen --force && \
-        mkdir -p /poet-shared/validator-0 || true && \
-        cp -a /etc/sawtooth/keys /poet-shared/validator-0/ && \
-        while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done && \
-        while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
-        while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
-        cp /poet-shared/poet.batch / && \
-        sawset genesis \
-          -k /etc/sawtooth/keys/validator.priv \
-          -o config-genesis.batch && \
-      sawset proposal create -k /etc/sawtooth/keys/validator.priv sawtooth.consensus.algorithm.name=PoET sawtooth.consensus.algorithm.version=0.1 sawtooth.poet.report_public_key_pem=\"$$(cat /poet-shared/simulator_rk_pub.pem)\" sawtooth.poet.valid_enclave_measurements=$$(cat /poet-shared/poet-enclave-measurement) sawtooth.poet.valid_enclave_basenames=$$(cat /poet-shared/poet-enclave-basename) -o config.batch && \
-        sawset proposal create \
-          -k /etc/sawtooth/keys/validator.priv \
-             sawtooth.poet.target_wait_time=5 \
-             sawtooth.poet.initial_wait_time=25 \
-             sawtooth.publisher.max_batches_per_block=100 \
-          -o poet-settings.batch && \
-        sawadm genesis \
-          config-genesis.batch config.batch poet.batch poet-settings.batch && \
-        sawtooth-validator -v \
-          --bind network:tcp://eth0:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind consensus:tcp://eth0:5050 \
-          --peering static \
-          --endpoint tcp://validator-0:8800 \
-          --scheduler parallel
-      "
+      bash -c "chmod +x /etc/sawtooth/poet-start-run-inside-docker.sh && /etc/sawtooth/poet-start-run-inside-docker.sh"
     environment:
       PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
         /project/sawtooth-core/consensus/poet/simulator:\
@@ -250,22 +226,6 @@ services:
       "
     stop_signal: SIGKILL
 
-  intkey-tp-0:
-    image: hyperledger/sawtooth-intkey-tp-python:nightly
-    container_name: sawtooth-intkey-tp-python-default-0
-    expose:
-      - 4004
-    command: intkey-tp-python -C tcp://validator-0:4004
-    stop_signal: SIGKILL
-
-  xo-tp-0:
-    image: hyperledger/sawtooth-xo-tp-python:nightly
-    container_name: sawtooth-xo-tp-python-default-0
-    expose:
-      - 4004
-    command: xo-tp-python -vv -C tcp://validator-0:4004
-    stop_signal: SIGKILL
-
   settings-tp-0:
     image: hyperledger/sawtooth-settings-tp:nightly
     container_name: sawtooth-settings-tp-default-0
@@ -279,6 +239,7 @@ services:
     container_name: sawtooth-poet-engine-0
     volumes:
       - poet-shared:/poet-shared
+      - /path/to/poet-sawtooth-node/configs/keys:/poet-sawtooth-node/keys
     command: "bash -c \"\
         if [ ! -f /poet-shared/poet-enclave-measurement ]; then \
             poet enclave measurement >> /poet-shared/poet-enclave-measurement; \
@@ -289,9 +250,9 @@ services:
         if [ ! -f /poet-shared/simulator_rk_pub.pem ]; then \
             cp /etc/sawtooth/simulator_rk_pub.pem /poet-shared; \
         fi && \
-        while [ ! -f /poet-shared/validator-0/keys/validator.priv ]; do sleep 1; done && \
-        cp -a /poet-shared/validator-0/keys /etc/sawtooth && \
-        poet registration create -k /etc/sawtooth/keys/validator.priv -o /poet-shared/poet.batch && \
+        while [ ! -f /poet-sawtooth-node/keys/validator.priv ]; do sleep 1; done && \
+        poet registration create -k /poet-sawtooth-node/keys/validator.priv -o /poet-shared/poet.batch && \
+        cp /poet-sawtooth-node/keys/validator.priv /etc/sawtooth/keys/validator.priv &&
         poet-engine -C tcp://validator-0:5050 --component tcp://validator-0:4004 \
     \""
 
@@ -305,13 +266,232 @@ services:
       PYTHONPATH: /project/sawtooth-core/consensus/poet/common
     stop_signal: SIGKILL
 
+
 ```
 
-NOTE: I've made some changes respect to the file provided by the team because I was getting a lot of errrors:
+the content of 'poet-start-run-inside-docker.sh' is
 
-first error I've got was that the poet engine was not producing blocks
-- then I got the error:
-- 
+
+``` bash
+#---------------------------------
+# Check if we need to generate keys
+#--------------------------------
+
+if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
+        sawadm keygen --force
+else
+  echo 'Keys already created'
+fi
+
+
+
+#---------------------------------
+# WAIT FOR POET ENGINE TO SETUP
+#---------------------------------
+
+# we must wait the container 'poet-engine' to generetae these files
+# since we need them to start a new poet network
+echo "waiting poet-enclave-measurement generation"
+while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done
+
+echo "waiting poet-enclave-basename generation"
+while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done
+
+echo "waiting poet.batch generation"
+while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done
+
+echo "waiting simulator_rk_pub.pem generation"
+while [ ! -f /poet-shared/simulator_rk_pub.pem ]; do sleep 1; done
+        
+
+
+
+if [ ! -e /var/lib/sawtooth/block-chain-id ]; then
+  echo "Blockchain not found. Starting genesis operations."
+  
+  #---------------------------------
+  # COPYING poet batch from the poet-engine-container
+  #---------------------------------
+
+  cp /poet-shared/poet.batch / 
+  
+  echo '---> copyied poet batch from the poet-engine-container'
+  
+  #---------------------------------
+  # creating the genesis configs batch
+  #---------------------------------
+ 
+  sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch
+  
+  echo '---> created config-genesis.batch'
+  
+  #---------------------------------
+  # creating the configs batch having the poet consensus
+  #---------------------------------
+  
+  sawset proposal create -k /etc/sawtooth/keys/validator.priv sawtooth.consensus.algorithm.name=PoET sawtooth.consensus.algorithm.version=0.1 sawtooth.poet.report_public_key_pem="$(cat /poet-shared/simulator_rk_pub.pem)" sawtooth.poet.valid_enclave_measurements=$(cat /poet-shared/poet-enclave-measurement) sawtooth.poet.valid_enclave_basenames=$(cat /poet-shared/poet-enclave-basename) -o config.batch
+  
+  echo '---> created sawtoot consensus config config.batch'
+  
+  #---------------------------------
+  # creating the poet settings batch
+  #---------------------------------
+  #sawset proposal create -k /etc/sawtooth/keys/validator.priv sawtooth.poet.target_wait_time=5 sawtooth.poet.initial_wait_time=25 sawtooth.publisher.max_batches_per_block=100 -o poet-settings.batch
+  
+  # with some settings for small netwworks ( < 12 nodes) according to https://sawtooth.hyperledger.org/faq/consensus.html
+  sawset proposal create -k /etc/sawtooth/keys/validator.priv sawtooth.poet.target_wait_time=5 sawtooth.poet.initial_wait_time=25 sawtooth.publisher.max_batches_per_block=100 sawtooth.poet.block_claim_delay=1 sawtooth.poet.key_block_claim_limit=100000 sawtooth.poet.ztest_minimum_win_count=999999999   -o poet-settings.batch
+  
+  echo '---> created poet settings poet-settings.batch'
+  
+  #---------------------------------
+  # generating the genesis final batch that will be executed first time
+  #---------------------------------
+  
+  # This command generates a serialized GenesisData protobuf message and stores it in the genesis.batch file.
+  sawadm genesis config-genesis.batch config.batch poet.batch poet-settings.batch
+  
+  echo '---> created genesis.batch'
+  
+  
+fi
+echo "  ";
+
+
+#-------------------------
+# starting validator
+#-------------------------
+
+echo "Starting validator"
+
+
+sawtooth-validator -v --bind network:tcp://eth0:8800 --bind component:tcp://eth0:4004 --bind consensus:tcp://eth0:5050 --peering dynamic --endpoint tcp://10.146.101.36:8800 --scheduler parallel
+
+```
+
+
+2. run docker-compose up
+3. go to terminal and run all of your transaction processors / transaction families 
+4. execute a transaction from a client
+5. check if the block has been committed
+6. stop the network: docker-compose down -v  // -v to remove the volume
+
+If you want to have other validator nodes, go to another machine and 
+
+1. create same folders as the genesis validator (to keep consistency)
+2. configure correclty 'validator.toml' and add this content to 'docker-compose' file:
+
+```bash
+
+# Copyright 2018 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+version: "2.1"
+
+volumes:
+  poet-shared:
+
+services:
+  shell:
+    image: hyperledger/sawtooth-shell
+    container_name: sawtooth-shell-poet
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
+
+  validator:
+    image: hyperledger/sawtooth-validator
+    container_name: sawtooth-validator-poet
+    expose:
+      - 4004
+      - 5050
+      - 8800
+    ports:
+      - "8800:8800"
+      - "4004:4004"
+    volumes:
+      - poet-shared:/poet-shared
+      - /root/poet-sawtooth-node/data:/var/lib/sawtooth/ #to backup ledger
+      - /root/poet-sawtooth-node/configs:/etc/sawtooth #to backup keys, policies, etc..
+    command: |
+      bash -c "
+        if [ ! -e /etc/sawtooth/keys/validator.priv ]; then
+          sawadm keygen
+        fi &&
+        if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then
+          sawtooth keygen my_key
+        fi &&
+        sawtooth-validator -vv
+      "
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  rest-api:
+    image: hyperledger/sawtooth-rest-api
+    container_name: sawtooth-rest-api-poet
+    expose:
+      - 8008
+    ports:
+      - "8008:8008"
+    command: |
+      bash -c "
+        sawtooth-rest-api --connect tcp://validator:4004 --bind 0.0.0.0:8008
+      "
+    stop_signal: SIGKILL
+
+  settings-tp:
+    image: hyperledger/sawtooth-settings-tp:nightly
+    container_name: sawtooth-settings-tp-poet
+    expose:
+      - 4004
+    command: settings-tp -v -C tcp://validator:4004
+    stop_signal: SIGKILL
+
+  poet-engine:
+    image: hyperledger/sawtooth-poet-engine:nightly
+    container_name: sawtooth-poet-engine
+    volumes:
+      - poet-shared:/poet-shared
+      - /root/poet-sawtooth-node/configs/keys:/poet-sawtooth-node/keys
+    command: "bash -c \"\
+        while [ ! -f /poet-sawtooth-node/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-sawtooth-node/keys /etc/sawtooth && \
+        poet-engine -C tcp://validator:5050 --component tcp://validator:4004 \
+    \""
+
+  poet-validator-registry-tp:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:nightly
+    container_name: sawtooth-poet-validator-registry-tp
+    expose:
+      - 4004
+    command: poet-validator-registry-tp -C tcp://validator:4004
+    environment:
+      PYTHONPATH: /project/sawtooth-core/consensus/poet/common
+    stop_signal: SIGKILL
+
+```
+
+
+
+
+---> ERRORS PRESENTED WHILE SETUP NETWORK
+
+1)
 ```
 [2022-08-03 14:50:35.631 ERROR    zmq_driver] Uncaught driver exception
 Traceback (most recent call last):
@@ -326,9 +506,9 @@ What I did:
 
 I change the docker images of the validator not to be "nightly" and left the poet-engine docker container to "nightly"
 
+2) Error: I had the 'genesis' validator configured to 'static' while the others were configured to 'dynamic'.
+So to solve the issue I changed the genesis validator configuration from 'static' to dynamic and restarted netwrok
 
-2. run docker-compose up
-3. go to terminal and run all of your transaction processors / transaction families 
-4. execute a transaction from a client
-5. check if the block has been committed
-6. stop the network: docker-compose down -v  // -v to remove the volume
+
+
+
