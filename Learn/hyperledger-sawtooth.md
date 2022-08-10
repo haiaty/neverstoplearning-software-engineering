@@ -510,5 +510,64 @@ I change the docker images of the validator not to be "nightly" and left the poe
 So to solve the issue I changed the genesis validator configuration from 'static' to dynamic and restarted netwrok
 
 
+#### PERFORMANCE TEST
+
+So in the end both POET and PBFT are similar in terms of tps (note that depending on configurations they can vary by a few tens),
+
+Those at sawtooth recommend using PBFT for small networks (like up to 12 nodes) while using POET for larger networks.
+
+Regarding tps, it must be said that it depends on the following factors
+
+- block size - block size (in bytes). In sawtooth, a block consists of several batches (which is a set of transactions)
+
+- transaction size (in bytes): the larger the transaction and the more transactions that can be put inside a block, then 
+the smaller the tps will be
+
+- block time: this is the time it takes to create a block.
+
+With this data, the formula to find the TPS is:
+
+
+(block size / transaction size) / block time
+
+---
+
+
+
+The tests I did with both were:
+
+4 nodes with 1 transaction per batch and 1 a batch per block. 
+I made the calls to create a new batch at the same time at each node (to their rest api) in the network and measured the time it took to create the individual blocks.
+
+The data were 
+
+PBFT
+
+block size: 31000 bytes 
+transaction size: 450 bytes
+max_batch_per_block = 100
+block time: 3 or 4 s
+
+TPS = (31000 / 450)/3 or 4 = 17 TPS to 30 TPS sec
+
+
+block size: 31000 bytes 
+transaction size: 450 bytes
+block time: 1 s
+max_batch_per_block = 1
+
+TPS = (31000 / 450)/1 = 68
+
+
+POET
+
+
+block size: 31000 bytes 
+transaction size: 450 bytes
+max_batch_per_block = 1
+block time: 4.86 s
+
+TPS = (31000 / 450)/ 4.86 = 14
+
 
 
