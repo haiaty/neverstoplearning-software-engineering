@@ -1,3 +1,11 @@
+## COMMANDS
+
+clean volumes not used:
+docker volume rm $(docker volume ls -qf dangling=true)
+
+clean images not used anymore and not reference by any container:
+docker image prune --all
+
 
 ## DOCKER CONTAINERS
 
