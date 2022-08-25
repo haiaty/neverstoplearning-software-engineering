@@ -1,11 +1,18 @@
 ## COMMANDS
 
-clean volumes not used:
+##### If you are having problems with space when building a docker image, consider cleaning you overlay space
+
+* clean volumes not used and not referenced by any container:
+
+```
 docker volume rm $(docker volume ls -qf dangling=true)
+```
 
-clean images not used anymore and not reference by any container:
+* clean images not used anymore and not reference by any container:
+
+```
 docker image prune --all
-
+```
 
 ## DOCKER CONTAINERS
 
