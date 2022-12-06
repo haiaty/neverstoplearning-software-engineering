@@ -204,6 +204,22 @@ in general, the owner and operator of the PostgreSQL instance where you're hosti
 Note that, even if multiple parties are hosting their data on the same, trusted node, they will not be able to access each other's data, as the Ledger API only shows to each party the data that it's authorized to access. https://stackoverflow.com/questions/70580340/how-is-daml-able-to-maintain-privacy-between-the-parties-if-they-share-the-same
 
 
+## TROUBLESHOOTING
+
+#### user error (Transitive dependencies with same unit id but conflicting package ids
+
+ solution 1: build the .dars in the same platform, for example build all dars on windows, or all .dars on linux, etc.. (see:  https://discuss.daml.com/t/transitive-dependencies-with-same-unit-id-but-conflicting-package-ids/5267/6 )
 
 
+Solution 2: have two different repos with the version in the .daml or have a branch with different daml.yaml
 
+You have to change the version and/or the name. It is not possible to depend on two different packages with the same name and version. This is the tradeoff we chose for the compiler to avoid users having to specify package ids everywhere. See: https://discuss.daml.com/t/working-with-packages-of-different-versions/2328![image](https://user-images.githubusercontent.com/12880451/205896088-df14e9bf-67a5-407f-8b19-5280688b7dc7.png)
+
+
+## UPGRADING APPLICATIONS (for example for bugfixing or new models)0
+
+If you make a change to the templates, before building the new dar,
+you should also change the property "version" in the "daml.yaml"
+in order to be able to import the new ".dar" in the "main" project.
+This is because You have to change the version and/or the name. It is not possible to depend on two different packages with the same name and version.
+(see https://discuss.daml.com/t/working-with-packages-of-different-versions/2328)
