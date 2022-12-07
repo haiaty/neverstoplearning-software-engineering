@@ -223,6 +223,29 @@ Solution 2: have two different repos with the version in the .daml or have a bra
 
 You have to change the version and/or the name. It is not possible to depend on two different packages with the same name and version. This is the tradeoff we chose for the compiler to avoid users having to specify package ids everywhere. See: https://discuss.daml.com/t/working-with-packages-of-different-versions/2328![image](https://user-images.githubusercontent.com/12880451/205896088-df14e9bf-67a5-407f-8b19-5280688b7dc7.png)
 
+### Exception in thread "main" java.lang.IllegalArgumentException: unknown module 885d5e47aa1115d34eb8d1246c3dac5aefa43a47508f236da5eb3be043a8eaf7:Scripts.InitializeLedger while looking for value 885d5e47aa1115d34eb8d1246c3dac5aefa43a47508f236da5eb3be043a8eaf7:Scripts.InitializeLedger:initialize
+
+Basically the problem was that the name of the module was wrong.
+
+I had the folder  daml/Scripts/InitializeScript.daml and a script called "initialize"
+
+And when running the "daml script", I was running with the wrong module path. Iwas running
+
+This: 
+
+daml script --dar .\main-1.0.0.dar --ledger-host localhost --ledger-port 6865 --script-name Scripts.InitializeLedger:initialize:initialize
+
+Instead of 
+
+daml script --dar .\main-1.0.0.dar --ledger-host localhost --ledger-port 6865 --script-name InitializeLedger:initialize
+
+
+	###  I was using navigator and trying to create new contracts from the template section, but when i clicked on the submit buttin nothing happened and I was not able to create the contract.
+
+Solution: basically I was inserting the wrong party because I was inserting into the input the party  display_name instead of the party Id. 
+I was able to spot it out because I entered in the postgresq database and saw that the party id was different from the one I was inserting![image](https://user-images.githubusercontent.com/12880451/206201799-19757a86-e889-41e3-a84c-0fa1b13a046b.png)
+
+
 
 ## UPGRADING APPLICATIONS (for example for bugfixing or new models)0
 
