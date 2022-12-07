@@ -203,6 +203,10 @@ A better option (IMHO) is to sign centrally. This way the keys are kept in a cen
 in general, the owner and operator of the PostgreSQL instance where you're hosting the ledger will indeed be able to see all of its content. This means that there must be a trust relationship between the operator of the database and the party which is hosting their data there. If a party does not trust any specific operator, they can run their own node. If that's the case, only the data which that party is authorized to see will be on the participant.
 Note that, even if multiple parties are hosting their data on the same, trusted node, they will not be able to access each other's data, as the Ledger API only shows to each party the data that it's authorized to access. https://stackoverflow.com/questions/70580340/how-is-daml-able-to-maintain-privacy-between-the-parties-if-they-share-the-same
 
+### Can I know wich contracts are available on a Daml application?
+
+It's not that easy.
+Read here to know why: https://discuss.daml.com/t/query-daml-templates-using-the-json-api/4481/7
 
 ## TROUBLESHOOTING
 
