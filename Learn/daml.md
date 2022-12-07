@@ -205,7 +205,7 @@ Note that, even if multiple parties are hosting their data on the same, trusted 
 
 ### Can I know wich contracts are available on a Daml application?
 
-It's not that easy.
+Yes, using navigator (https://docs.daml.com/1.18.3/tools/navigator/index.html). Otherwise, It's not that easy to develop a script or program that do that.
 Read here to know why: https://discuss.daml.com/t/query-daml-templates-using-the-json-api/4481/7
 
 ## TROUBLESHOOTING
