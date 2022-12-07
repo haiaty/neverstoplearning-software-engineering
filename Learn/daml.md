@@ -208,6 +208,10 @@ Note that, even if multiple parties are hosting their data on the same, trusted 
 Yes, using navigator (https://docs.daml.com/1.18.3/tools/navigator/index.html). Otherwise, It's not that easy to develop a script or program that do that.
 Read here to know why: https://discuss.daml.com/t/query-daml-templates-using-the-json-api/4481/7
 
+to use navigator, download the sdk and execute:
+
+daml navigator server
+
 ## TROUBLESHOOTING
 
 #### user error (Transitive dependencies with same unit id but conflicting package ids
