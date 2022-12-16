@@ -186,6 +186,11 @@ The maintainers must be a subset of the signatories and depend only on the key. 
 When debugging DAML Scripts, whether inside of a trigger or repl, is there a way to capture debug output back to the script? 
 At the moment no, debug output is just written to stdout. What you could do is to have your own wrapper that tracks debug mesasges in something like a State action in addition to printing it out. Then you can easily capture debug messages.
 
+## RESET LEDGER
+
+- if you reset the ledger using ' ResetServiceGrpc.ResetServiceBlockingStub blockingStub = ResetServiceGrpc.newBlockingStub(channel);' 
+you will reset parties, acive contracts but will not remove any templates uploaded to it using upload-dar. Templates will still remain
+
 --
 
 ## OTHER
