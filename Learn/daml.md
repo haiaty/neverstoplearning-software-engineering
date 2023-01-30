@@ -1,4 +1,13 @@
-concepts, information and my experience and other about working with daml (around 6 months working with it)
+concepts, information and my experience and other about working with daml (around 12 months working with it)
+
+## UTILS
+
+
+exercise by key in script:
+
+```
+submit <party> do exerciseByKeyCmd @TemplateName (key1, key2) <ChoiceName> with param = "text"
+```
 
 ## TIPS, SUGGESTIONS, BEST PRACTICES
 
@@ -259,3 +268,5 @@ you should also change the property "version" in the "daml.yaml"
 in order to be able to import the new ".dar" in the "main" project.
 This is because You have to change the version and/or the name. It is not possible to depend on two different packages with the same name and version.
 (see https://discuss.daml.com/t/working-with-packages-of-different-versions/2328)
+
+
