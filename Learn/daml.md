@@ -50,6 +50,14 @@ fromSomeNote "error mesage" <somevar>
 forA_ batchCids (`exercise` Batch.Settle with actors = singleton provider)
 ```
 
+#### create a list of tuples usig zip and fetching contracts
+
+```
+bids <- zip bidCids <$> forA bidCids fetch
+```
+
+Here, forA is a DAML function that maps a list of values to a list of actions and sequences the actions. The fetch function is passed to forA to fetch the contracts associated with each bidCids identifier. The <$> operator is the infix version of fmap, which applies the zip bidCids function to the resulting list of fetched contracts. The resulting list of tuples is then bound to the bids variable.
+
 
 ## TIPS, SUGGESTIONS, BEST PRACTICES
 
