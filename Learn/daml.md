@@ -3,11 +3,53 @@ concepts, information and my experience and other about working with daml (aroun
 ## UTILS
 
 
-exercise by key in script:
+#### exercise by key in script:
 
 ```
 submit <party> do exerciseByKeyCmd @TemplateName (key1, key2) <ChoiceName> with param = "text"
 ```
+
+
+#### meaning of $ operator:
+
+The $ symbol in DAML is an infix operator that's used for function application.
+
+The $ operator has lower precedence than function application using parentheses, which means that expressions to the right of the operator are evaluated first. 
+
+This makes it useful for avoiding parentheses in nested function calls.
+
+For example, the expression foo (bar (baz x)) can be written as foo $ bar $ baz x using the $ operator. This is equivalent to writing foo(bar(baz(x))), but it's less verbose and easier to read in some cases.
+
+In this example:
+
+```
+(_, delRef) <- fetchByKey @Account.R $ getAccount collateral
+```
+
+In the code you provided, the $ operator is used to apply the getAccount function to the collateral argument, and then pass the result of that function call to the fetchByKey function. This is equivalent to writing fetchByKey @Account.R (getAccount collateral), but it's written using the $ operator for conciseness.
+
+#### if with different branches
+
+```
+        let newStatus = if
+              | remaining == auction.quantity.amount -> NoValidBids
+              | remaining > 0.0 -> PartiallyAllocated with finalPrice; remaining
+              | otherwise -> FullyAllocated with finalPrice
+
+```
+
+#### get value from some or give error
+
+```
+fromSomeNote "error mesage" <somevar>
+```
+
+#### execute in 'loop'
+
+```
+forA_ batchCids (`exercise` Batch.Settle with actors = singleton provider)
+```
+
 
 ## TIPS, SUGGESTIONS, BEST PRACTICES
 
