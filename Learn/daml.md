@@ -10,6 +10,14 @@ submit <party> do exerciseByKeyCmd @TemplateName (key1, key2) <ChoiceName> with 
 ```
 
 
+#### do a query for all templates that a pary can see and take the first one
+
+```
+    a <- query @<templateName> <party>         -- this query return an list of contracts 
+
+    let (_, contract) = head a          -- we take the first one since we know it is the one we have just created
+```
+
 #### meaning of $ operator:
 
 The $ symbol in DAML is an infix operator that's used for function application.
