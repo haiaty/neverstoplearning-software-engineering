@@ -23,6 +23,31 @@ submit <party> do exerciseByKeyCmd @TemplateName (key1, key2) <ChoiceName> with 
     -- remenber to import the function of DA.List --    import DA.List
 ```
 
+#### check if a result of a query is empty in a script
+
+```
+list <- query @<Template> <party>
+  
+if (null list) then do abort "lisst could not be empty" else do return ()
+
+ ```
+ 
+ #### iterate over a list and perform fetch, and after perform some checks, inside a choice
+ 
+ ```
+ 
+do
+
+let fetchContracts contractKey = do
+              (_, contract) <- fetchByKey @<Template> (contractKey._1, contractKey._2)      --to try also fetchByKey @<Template> contractKey
+              assertMsg "error if boolValue is false" contract.someBoolValue
+              return contract
+
+mapA_ fetchContracts [(key._1, key._2), (key._1, key._2)]
+
+ ```
+ 
+
 #### meaning of $ operator:
 
 The $ symbol in DAML is an infix operator that's used for function application.
