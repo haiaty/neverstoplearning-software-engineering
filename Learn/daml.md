@@ -16,6 +16,11 @@ submit <party> do exerciseByKeyCmd @TemplateName (key1, key2) <ChoiceName> with 
     a <- query @<templateName> <party>         -- this query return an list of contracts 
 
     let (_, contract) = head a          -- we take the first one since we know it is the one we have just created
+    
+    
+    
+    
+    -- remenber to import the function of DA.List --    import DA.List
 ```
 
 #### meaning of $ operator:
