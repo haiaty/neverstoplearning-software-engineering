@@ -96,6 +96,16 @@ bids <- zip bidCids <$> forA bidCids fetch
 
 Here, forA is a DAML function that maps a list of values to a list of actions and sequences the actions. The fetch function is passed to forA to fetch the contracts associated with each bidCids identifier. The <$> operator is the infix version of fmap, which applies the zip bidCids function to the resulting list of fetched contracts. The resulting list of tuples is then bound to the bids variable.
 
+### examples of named imports
+
+```
+import DA.Map qualified as M (empty)
+import DA.Set qualified as S (fromList, singleton)
+import Daml.Finance.Interface.Account.Account qualified as Account (Credit(..), Debit(..), GetCid(..), I, R, Controllers(..), View(..), createReference, disclosureUpdateReference)
+import Daml.Finance.Interface.Account.Factory qualified as AccountFactory (Create(..), F, Remove(..), View(..))
+import Daml.Finance.Util.Disclosure (addObserversImpl, removeObserversImpl, setObserversImpl)
+```
+
 
 ## TIPS, SUGGESTIONS, BEST PRACTICES
 
