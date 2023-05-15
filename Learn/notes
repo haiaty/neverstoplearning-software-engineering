@@ -1,0 +1,2 @@
+
+* it is best to have classes (or functions) that do a single thing and that dependecies is explicited passed in the function arguments
