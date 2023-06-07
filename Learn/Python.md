@@ -35,6 +35,9 @@ pip list
 deactivate
 ```
 
+### ATTENTION: 
+don't move the folder having the virtual env to anoother place using mv command otherwise it wont work correclty anymore. If you do it you will need to recreate the venv. Rembeer that you did it in the past.
+
 resources: 
 https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/
 https://docs.python.org/3/tutorial/venv.html
