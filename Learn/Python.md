@@ -35,4 +35,6 @@ pip list
 deactivate
 ```
 
-resources: https://docs.python.org/3/tutorial/venv.html
+resources: 
+https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/
+https://docs.python.org/3/tutorial/venv.html
