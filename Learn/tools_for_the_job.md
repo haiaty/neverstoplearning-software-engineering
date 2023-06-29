@@ -21,3 +21,19 @@
 ### Mysql + git databse
 
 - Dolt  https://docs.dolthub.com/introduction/what-is-dolt
+
+
+## Graph database 
+
+- Memgraph  https://memgraph.com/
+
+- Neo4J
+
+# Key value 
+
+- Redis
+
+# key value ACID dotributed
+
+- TiKV - https://tikv.org/
+- KeyDb - https://docs.keydb.dev/
