@@ -1,6 +1,11 @@
 
 
 
+## full text search engine with http
+
+- meilisearch   https://www.meilisearch.com/
+
+- manticore  https://manual.manticoresearch.com/Connecting_to_the_server/HTTP#/sql
 
 
 ### Schemaless DB (with possibility of become schemafull) + ACID + REST + Scalable + NOsql + Edge computing (with sync)  +  JSON SuPPORT + Graph db + Javascript functions
