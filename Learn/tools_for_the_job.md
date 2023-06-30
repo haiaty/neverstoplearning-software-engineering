@@ -37,3 +37,7 @@
 
 - TiKV - https://tikv.org/
 - KeyDb - https://docs.keydb.dev/
+
+# Database with AI -  Generative AI tables
+
+  - MindsDB  https://docs.mindsdb.com/what-is-mindsdb
