@@ -26,13 +26,17 @@ __Configurability__: The ability of a system or component to adapt to different 
 
 __Integrability - Interoperability__: The ability of a system to exchange information with and use the services of other systems.The "integrability" quality attribute in software architecture refers to the ability of a software system to seamlessly integrate with other systems, components, or services. It involves designing the system in a way that enables easy and efficient integration, communication, and collaboration with external entities.
 
-In software architecture, quality attributes are crucial because they have a significant impact on how the system is designed, built, tested, and maintained. Each system may have a different set of important quality attributes depending on its use case and the expectations of its users or stakeholders.
 
 __Deployability__: The "deployability" quality attribute in software architecture refers to the ease and efficiency with which a software system can be deployed to various environments, such as development, testing, staging, and production. It encompasses the processes, tools, and techniques involved in packaging, distributing, and installing the software.
 
 __Energy efficiency__:The "energy efficiency" quality attribute in software architecture refers to the ability of a software system to minimize its energy consumption and optimize resource usage while performing its required functions. It focuses on reducing the energy footprint of the software and promoting sustainability.
 
 __safety__: The "safety" quality attribute in software architecture refers to the ability of a software system to operate reliably and securely, minimizing the risks of harm to users, the environment, and property. It involves designing the system to prevent or mitigate potential hazards, errors, or failures that could result in accidents, injuries, or other safety-related consequences.
+
+----
+
+
+In software architecture, quality attributes are crucial because they have a significant impact on how the system is designed, built, tested, and maintained. Each system may have a different set of important quality attributes depending on its use case and the expectations of its users or stakeholders.
 
 ## performance
 
