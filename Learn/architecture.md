@@ -1,6 +1,33 @@
 
 # quality attributes
 
+Quality attributes (or non-functional requirements) are the key characteristics of a system that define how it behaves. These attributes play a pivotal role in the design of a system's architecture and often determine the success or failure of a system. Here are some common quality attributes:
+
+__Performance__: This refers to the system's response time, processing speed, and overall efficiency under a certain workload. It can also include factors such as throughput and latency.
+
+__Scalability__: The ability of a system to handle increased load — for instance, more users or operations — without adverse effects on performance or other quality attributes.
+
+__Availability__: The degree to which a system is operational and accessible when required for use. This is often expressed as a percentage, with 100% meaning the system is always up and running.
+
+__Reliability__: The ability of a system to perform a required function under stated conditions for a specified period of time without failure.
+
+__Security__: The system's ability to resist unauthorized access or attacks and to provide access and modification rights to authorized users.
+
+__Usability__: The degree to which a system can be used by specified users to achieve specified goals with effectiveness, efficiency, and satisfaction in a specified context of use.
+
+__Maintainability (modifiability)__: How easy it is to modify the system, whether to fix bugs, add new features, or change existing features.Modifiability: The ability of a system to support changes (additions, deletions, modifications) in its features and functions.
+
+__Testability__: The degree to which a system or component facilitates the establishment of test criteria and the performance of tests to determine whether those criteria have been met.
+
+__Portability__: The ease with which the system can be transferred from one hardware or software environment to another.
+
+__Configurability__: The ability of a system or component to adapt to different environments, user preferences, or system requirements by adjusting various parameters or settings.
+
+
+__Interoperability__: The ability of a system to exchange information with and use the services of other systems.
+
+In software architecture, quality attributes are crucial because they have a significant impact on how the system is designed, built, tested, and maintained. Each system may have a different set of important quality attributes depending on its use case and the expectations of its users or stakeholders.
+
 ## performance
 
 - response time
