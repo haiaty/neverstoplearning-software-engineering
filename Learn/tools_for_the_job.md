@@ -41,3 +41,13 @@
 # Database with AI -  Generative AI tables
 
   - MindsDB  https://docs.mindsdb.com/what-is-mindsdb
+
+
+# business intelligence dashboard
+
+  - Apache Superset https://superset.apache.org/
+
+# admin panel apps made easy 
+
+ - AppSmith - https://www.appsmith.com/
+
