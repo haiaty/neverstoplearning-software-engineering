@@ -45,7 +45,7 @@
 
 # business intelligence dashboard
 
-  - Apache Superset https://superset.apache.org/
+  - Apache Superset https://superset.apache.org/    (keep in mind that subqueries or complex sql statements are not allowed. Only simple queries. This a limit.)
 
 # admin panel apps made easy 
 
