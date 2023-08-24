@@ -1,0 +1,70 @@
+ADD (Architecture driven design)
+
+1) Ask to stakeholders for each of these, which one are the most important
+
+	- Performance
+	- Scalability
+	- Availability
+	- Reliability
+	- Security
+	- Usability
+	- Maintainability (modifiability)
+	- Testability
+	- Portability
+	- Configurability
+	- Integrability (interoperability)
+	- Deployability
+	- Energy Efficiency
+	- Safety
+
+
+	2) Once decided the top 3 most important ones, we proceeded with scnearios for each one.
+
+Let's suppose that for our current project Performance, usability and configurability are the most importat ones at business perspective, then we go ahead and write the scenarios for each one.
+
+A for example of a performance scenario:
+
+Source of stimulus: External system 
+Stimulus: External system makes a high volume of API calls 
+Artifact: System API 
+Environment: Under normal operating conditions
+Response: The system processes API calls and returns responses 
+Response measure: API maintains a throughput of 1000 requests per second
+
+An example of configurability scenario
+
+Source of stimulus: User 
+Stimulus: User changes their personal preferences in the application 
+Artifact: User interface
+Environment: During normal system operations 
+Response: The system applies the new user preferences 
+Response measure: The changes are applied instantly and persist across different sessions
+
+From <https://github.com/haiaty/neverstoplearning-software-engineering/blob/54c7cd2bf1c83e357615472f7fcaca6a8f3c800d/Learn/architecture.md> 
+
+
+An example of usability scenario
+
+Source of stimulus: New user 
+Stimulus: User attempts to complete a core task for the first time 
+Artifact: User interface and help documentation 
+Environment: User has no previous experience with the system 
+Response: The system guides the user through the task with clear instructions and intuitive interface design 
+Response measure: The user is able to complete the task correctly within 10 minutes, with a satisfaction score of at least 4 out of 5
+
+From <https://github.com/haiaty/neverstoplearning-software-engineering/blob/54c7cd2bf1c83e357615472f7fcaca6a8f3c800d/Learn/architecture.md> 
+
+
+
+3) Once we have the scenarios we decide on wich quality attributes (or which scenarios to work with)
+
+4) Once decided the scenario, we decide wich elements, maybe one or maybe not only one of the architecture to work or refine (for example: refactor the business logic part, extract logic to separate package, replace the database,).
+	Let's suppose we choose the scneario about performance, and now we selected the element database and the element the application. 
+	
+5) Now we choose desgin concepts, or tactics, or patterns that satisfy the design requirementr. For example we choose a technology (mayvbe node and manticore) that satisfy the requirements.
+	
+6) Then we instantiate the design concepts, in other words we implement the thing, choosing the details. If choose nodejs, which version, if choose manticore, which version and distributed?etc.
+	
+7) Then we write down the ADR (architectural decision records) documentating why we choose that design decisions (copy a model of ADR's). We can also sketch some views or diagrams
+	
+8) Review and be sure that it actually satifies the drivers and the scenarios and the qualitiy atrributes to avoid unhappy stakeholders
