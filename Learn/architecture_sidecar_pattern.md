@@ -160,4 +160,6 @@ Remember, this example focuses on the conceptual setup. Depending on your actual
 
 The Sidecar pattern and service mesh are methods to easily apply common features, like logging, security, or monitoring, across a network of computers. They're useful for more than just linking operations together. For example, instead of adding security checks to each service individually, you can use a service mesh to handle security for all services at once. This approach works like the Decorator Design Pattern from a famous design book, letting someone add extra functions, such as adding a logging feature that tracks all messages between services, across a network without changing how things are normally connected.
 
+The sidecar isn’t meant to be used for just anything, only operational coupling.Operational coupling includes the things we’ve been discussing—logging, monitoring, service discovery, authentication and authorization, and so on. Basically, it covers all the plumbing parts of the infrastructure that have no domain responsibility. But you should never put domain shared components, like the Address or Customer class, in the sidecar.
+
 
