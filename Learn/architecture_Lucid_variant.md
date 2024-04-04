@@ -38,7 +38,7 @@ handlers), CLI, etc.); think of it like a FaaS (Function as a Service), a thing 
 
 ----
 
-We have added other principles to it:
+other principles added to it:
 
 * You can compose your functionality in services and features. For example a service could be composed of  2 features + 1 operation + 1 job.
   Another example: a feature may be composed of 3 operations + 2 jobs...
@@ -76,7 +76,8 @@ but here is these building blocks (jobs, operations, features) that is being com
 
 * The only way to talk to the application, or the module if it is a modular monolith, is using **services** or **features**. It is forbidden to call an **operation** or **job** from another module.
 * Reduce at the minimun the cogntive load by using semantic variables names, adding semantic comments, separating visualy part of the code
-* Avoid state or a shared global state. All things needed for jobs/services/operations should be passed to it as its arguments
+* Every instruction or block of related instructuons MUST be commented with an clear english explanation of what it does and why it was done in that way. Only exceptions are for self clear instructions.
+* Avoid as much as possible state (ex: objects with state on the instance or $this) or a shared global state. All things needed for jobs/services/operations should be passed to it as its arguments. 
 
 
 ATTENTION: we decided not to treat framework-related details and to let it be handled case by case. We want to be more
