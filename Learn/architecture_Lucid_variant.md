@@ -75,9 +75,11 @@ but here is these building blocks (jobs, operations, features) that is being com
   (concepts elaborated after taken from HEXAGONAL ARCHITECTURE)
 
 * The only way to talk to the application, or the module if it is a modular monolith, is using **services** or **features**. It is forbidden to call an **operation** or **job** from another module.
-* Reduce at the minimun the cogntive load by using semantic variables names, adding semantic comments, separating visualy part of the code
+* Reduce at the minimun the cognitive load by using semantic variables names, adding semantic comments, separating visualy part of the code
 * Every instruction or block of related instructuons MUST be commented with an clear english explanation of what it does and why it was done in that way. Only exceptions are for self clear instructions.
-* Avoid as much as possible state (ex: objects with state on the instance or $this) or a shared global state. All things needed for jobs/services/operations should be passed to it as its arguments. 
+* Avoid as much as possible state (ex: objects with state on the instance or $this) or a shared global state. All things needed for jobs/services/operations should be passed to it as its arguments.
+* services/features/operations/jobs should be put in separate folder for example under a /src/ folder.
+* Don't put framework logic inside services/ofeatures/operations/jobs.
 
 
 ATTENTION: we decided not to treat framework-related details and to let it be handled case by case. We want to be more
