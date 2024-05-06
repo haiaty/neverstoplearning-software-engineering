@@ -39,3 +39,8 @@ So call it with exatcly the domain semantic, even if iw would result in a longer
 
 so the variable would be 'Visit'
 
+### * having state in $this variable and mutating it later
+if you have setters (so you mutate the state) then you will need to find out where tthat variable was set and you will keep
+that information so will increase cognitive load. Even worse if you set in the $this another class, so that you will need to go and keep in the class type.
+
+how to reduce cognitive load? avoid mutable state inside $this during the workflow.
