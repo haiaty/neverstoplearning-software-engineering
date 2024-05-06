@@ -5,6 +5,12 @@ Write maintanable code is harder. It's a fight against cognitive load.
 
 ## Things that adds to cognitive load on software development/debugging
 
+#### do not comment properly
+
+if you don't put semantic comments, explaining what the code is doing and why a given choice was made
+you will add cognitive load because you will need to find out those informations going in the code. 
+So the comment would be a sort of mental cache, to avoid going trying to figure out what the code is doing and then 
+keeping that information in mind during the development or debugging
 
 #### function call in the param of another function for example:
 
