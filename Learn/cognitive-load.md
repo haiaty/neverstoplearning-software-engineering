@@ -44,3 +44,7 @@ if you have setters (so you mutate the state) then you will need to find out whe
 that information so will increase cognitive load. Even worse if you set in the $this another class, so that you will need to go and keep in the class type.
 
 how to reduce cognitive load? avoid mutable state inside $this during the workflow.
+
+### high coupling betweeb modules (or classes)
+having a high decree of coupling betwen modules, for example a module that calls another module that calls another module and may is circular, increase the cognitive load.
+Avoid coupling between modules
