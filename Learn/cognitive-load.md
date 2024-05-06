@@ -5,14 +5,14 @@ Write maintanable code is harder. It's a fight against cognitive load.
 
 ## Things that adds to cognitive load on software development/debugging
 
-#### do not comment properly
+### * do not comment properly
 
 if you don't put semantic comments, explaining what the code is doing and why a given choice was made
 you will add cognitive load because you will need to find out those informations going in the code. 
 So the comment would be a sort of mental cache, to avoid going trying to figure out what the code is doing and then 
 keeping that information in mind during the development or debugging
 
-#### function call in the param of another function for example:
+### * function call in the param of another function for example:
 
 funcA(funcB(z, l), x, y)
 
@@ -31,7 +31,7 @@ even better:
 lastUsers = GetLastUsers(z, l );
 doSomethingWithLastUsers(lastUsers, x, y)
 
-#### naming things with different names from the domain names
+### * naming things with different names from the domain names
 
 for example, if the your domain has a Visit entity, if you call your variable different, for example 'Form', you will have cognitive load
 since every time you will need to perform the mapping between 'forms' and associate it with 'Visit.
