@@ -70,7 +70,7 @@ but here is these building blocks (jobs, operations, features) that is being com
     return resp.send(data);
   });
   ```
-* We have also added a folder `drivers`, in the root of the project. The meaning of the files inside it is to provide
+* We have also added a folder `drivers`,inside the src/. The meaning of the files inside it is to provide
   connections to external world, like database or HTTP clients. It can be used by **Jobs**, **operations**, **features**, **services**.
   (concepts elaborated after taken from HEXAGONAL ARCHITECTURE)
 
