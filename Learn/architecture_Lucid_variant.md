@@ -1,4 +1,4 @@
-# proposed architecture: Luminous Architecture - a lucid variant that combines Lucid principles + FaaS + Functional Composition + hexagonal architecture
+# proposed architecture: Luminous Architecture - a lucid variant that combines some Lucid principles + FaaS + Functional Composition + hexagonal architecture
 
 ---
 
